@@ -11,7 +11,7 @@ Using the library, you can create shapes like these:
 To use the `RectangleContour` library as a dependency in a SwiftPM project, add the following to your `Package` dependencies in your `Package.swift` manifest:
 
 ```swift
-.package(url: "https://github.com/mayoff/RectangleContour", from: "0.0.1"),
+.package(url: "https://github.com/mayoff/RectangleContour", from: "0.0.2"),
 ```
 
 and include `"RectangleContour"` as a dependency of your `Target`:
