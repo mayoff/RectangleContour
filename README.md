@@ -1,8 +1,10 @@
 # `RectangleContour`
 
-This package implements the algorithm described in the 1979 paper [“Finding the Contour of a Union of Iso-Oriented Rectangles”][1] by Witold Lipski Jr. and Franco P. Preparata.
+My main product is a library named `RectangleContour` which contains one Swift module also named `RectangleContour`. The library implements an algorithm for finding the union of a set of axis-aligned rectangles.
 
-My main product is a library named `RectangleContour` which contains one Swift module also named `RectangleContour`.
+Using the library, you can create shapes like these:
+
+![demo images](demos.png)
 
 ## Adding `RectangleContour` as a Dependency
 
@@ -61,6 +63,10 @@ If you need a `SwiftUI.Path` or an `UIBezierPath`, you can wrap the `CGPath`:
 let swiftuiPath = Path(roundedPath)
 let uiPath = UIBezierPath(cgPath: roundedPath)
 ```
+
+## Implementation Notes
+
+This package implements the algorithm described in the 1979 paper [“Finding the Contour of a Union of Iso-Oriented Rectangles”][1] by Witold Lipski Jr. and Franco P. Preparata.
 
 [1]: Lipski-Preparata.pdf
 [2]: Sources/MacDemoAppModule/RectDemoView.swift
