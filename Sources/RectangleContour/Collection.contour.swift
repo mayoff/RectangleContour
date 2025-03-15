@@ -130,7 +130,7 @@ extension Collection where Element == CGRect {
 
         // All unique y coordinates (“ordinates” in the paper), sorted lowest-first. The indices of this array are the bounds of segment spans in the segment tree.
         let ys = nonEmpties.map(\.origin.y).makeSet()
-            .union(self.map { $0.origin.y + $0.size.height })
+            .union(nonEmpties.map { $0.origin.y + $0.size.height })
             .sorted()
 
         // I need this because SegmentTree can't handle size 0.
