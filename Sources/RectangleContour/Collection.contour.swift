@@ -137,7 +137,7 @@ extension Collection where Element == CGRect {
         guard !ys.isEmpty else { return [] }
 
         let iForY: [CGFloat: Int] = ys.enumerated().reduce(into: [:]) { $0[$1.element] = $1.offset }
-        let verts = self.reduce(into: [Vert]()) {
+        let verts = nonEmpties.reduce(into: [Vert]()) {
             $0.append($1.enteringVert(iForY: iForY))
             $0.append($1.exitingVert(iForY: iForY))
         }.sorted()
@@ -205,11 +205,11 @@ fileprivate struct Vert: Comparable {
 
 extension CGRect {
     fileprivate func enteringVert(iForY: [CGFloat: Int]) -> Vert {
-        return .init(x: minX, start: iForY[minY]!, end: iForY[maxY]!, crossingType: .entering)
+        return .init(x: minX, start: iForY[minY] ?? 0, end: iForY[maxY] ?? 0, crossingType: .entering) // ?? 0 is incorrect but better than a crash
     }
     
     fileprivate func exitingVert(iForY: [CGFloat: Int]) -> Vert {
-        return .init(x: maxX, start: iForY[minY]!, end: iForY[maxY]!, crossingType: .exiting)
+        return .init(x: maxX, start: iForY[minY] ?? 0, end: iForY[maxY] ??, crossingType: .exiting) // ?? 0 is incorrect but better than a crash
     }
 }
 
