@@ -209,7 +209,7 @@ extension CGRect {
     }
     
     fileprivate func exitingVert(iForY: [CGFloat: Int]) -> Vert {
-        return .init(x: maxX, start: iForY[minY] ?? 0, end: iForY[maxY] ??, crossingType: .exiting) // ?? 0 is incorrect but better than a crash
+        return .init(x: maxX, start: iForY[minY] ?? 0, end: iForY[maxY] ?? 0, crossingType: .exiting) // ?? 0 is incorrect but better than a crash
     }
 }
 
