@@ -129,15 +129,16 @@ extension Collection where Element == CGRect {
         let nonEmpties = self.lazy.filter { !$0.isEmpty }
 
         // All unique y coordinates (“ordinates” in the paper), sorted lowest-first. The indices of this array are the bounds of segment spans in the segment tree.
-        let ys = nonEmpties.map(\.origin.y).makeSet()
-            .union(self.map { $0.origin.y + $0.size.height })
-            .sorted()
+        let ys = nonEmpties.reduce(into: Set<CGFloat>()) {
+            $0.insert($1.origin.y)
+            $0.insert($1.origin.y + $1.size.height)
+        }.sorted()
 
         // I need this because SegmentTree can't handle size 0.
         guard !ys.isEmpty else { return [] }
 
-        let iForY: [CGFloat: Int] = ys.enumerated().reduce(into: [:]) { $0[$1.element] = $1.offset }
-        let verts = self.reduce(into: [Vert]()) {
+        let iForY: [CGFloat: Int] = ys.reduce(into: [:]) { $0[$1] = $0.count }
+        let verts = nonEmpties.reduce(into: [Vert]()) {
             $0.append($1.enteringVert(iForY: iForY))
             $0.append($1.exitingVert(iForY: iForY))
         }.sorted()

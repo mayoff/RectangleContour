@@ -45,6 +45,11 @@ struct Rect: Equatable {
     }
 
     var unitRect: CGRect { .init(x: x0, y: y0, width: x1 - x0, height: y1 - y0) }
+
+    mutating func makeZeroWidth() {
+        x0 = 0.5 * x0 + 0.5 * x1
+        x1 = x0
+    }
 }
 
 struct RectState {
@@ -66,6 +71,7 @@ struct RectState {
         case delete
         case drag(CGVector)
         case endDrag
+        case makeZeroWidth
         case select
     }
 
@@ -111,6 +117,10 @@ struct RectState {
 
         case .endDrag:
             dragState = nil
+            return nil
+
+        case .makeZeroWidth:
+            rect.makeZeroWidth()
             return nil
 
         case .select:
@@ -192,6 +202,7 @@ extension RectDemoModel {
             case .select:
                 selection = id
             }
+            print(rectStates)
 
         case .setCornerRadius(let r):
             cornerRadius = r

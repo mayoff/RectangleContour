@@ -46,6 +46,23 @@ struct RectDemoView: View {
                 )
                     .padding(.leading, 20)
 
+                // For testing that the algorithm handles empty rectangles.
+                Button {
+                    if let id = model.selection {
+                    send(.rect(id, .makeZeroWidth))
+                    }
+                } label: {
+                    Image(systemName: "arrowtriangle.right.and.line.vertical.and.arrowtriangle.left.fill")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .shadow(radius: 2)
+                        .frame(width: 40, height: 40)
+                        .padding(8)
+                        .foregroundColor(model.selection != nil ? .accentColor : nil)
+                }
+                .buttonStyle(.borderless)
+                .disabled(model.selection == nil)
+
                 Button {
                     if let id = model.selection {
                         send(.rect(id, .delete))
@@ -268,7 +285,6 @@ fileprivate struct ContourShape: Shape {
         let cgRects: [CGRect] = rects
             .lazy
             .map { $0.unitRect.applying(transform).insetBy(dx: -cornerRadius, dy: -cornerRadius) }
-            .filter { !$0.isEmpty }
 
         let cgPath = cgRects.contour()
             .cgPath(cornerRadius: cornerRadius)
