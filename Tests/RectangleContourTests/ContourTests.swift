@@ -91,4 +91,22 @@ final class ContourTests: XCTestCase {
 
         XCTAssertEqual(actual, expected)
     }
+
+    func testAdjacentRectangles() throws {
+      let actual = [
+        CGRect(x: 0, y: 1, width: 1, height: 1),
+        CGRect(x: 0, y: 0, width: 1, height: 1),
+      ].contour().normalized()
+
+      let expected = IsoOrientedContour(cycles: [
+        .init([
+            .init(x: 0, y: 0),
+            .init(x: 1, y: 0),
+            .init(x: 1, y: 2),
+            .init(x: 0, y: 2),
+        ])
+      ])
+
+      XCTAssertEqual(actual, expected)
+    }
 }

@@ -110,13 +110,59 @@ extension Collection where Element == CGRect {
         var cycles: [IsoOrientedContour.Cycle] = []
         while let first = links.popFirst() {
             var cycle: [CGPoint] = []
-            cycle.append(edges[first.key].end)
+
+            /// Input like `[CGRect(x: 0, y: 0, width: 1, height:1), CGRect(x: 0, y: 1, width: 1, height: 1)]` generates points `(0, 1)` and `(1, 1)` which are in the the middle of longer vertical segments and so are extraneous. I eliminate them here.
+            func append(_ p: CGPoint) {
+                guard let last = cycle.last else {
+                    cycle.append(p)
+                    return
+                }
+
+                // Extraneous points are always on a vertical segment,
+                guard p.x == last.x else {
+                    // p can't be extraneous because it ends a horizontal segment.
+                    cycle.append(p)
+                    return
+                }
+
+                guard p != last else {
+                    // p is a pure duplicate.
+                    return
+                }
+
+                guard
+                    // Is there a segment for p to extend?
+                    let penultimate = cycle.dropLast().last,
+                    // And does p extend that segment? It must have the same x and last.y must be between penultimate.y and p.y. I acknowledge that this between-test is tricky.
+                    penultimate.x == p.x && ((penultimate.y < last.y) == (last.y < p.y))
+                else {
+                    cycle.append(p)
+                    return
+                }
+
+                cycle.removeLast()
+                cycle.append(p)
+            }
+
+            append(edges[first.key].end)
             var prior = first.value
-            cycle.append(edges[prior].start)
+            append(edges[prior].start)
             while let next = links.removeValue(forKey: prior) {
-                cycle.append(edges[prior].end)
+                append(edges[prior].end)
                 prior = next
-                cycle.append(edges[prior].start)
+                append(edges[prior].start)
+            }
+
+            if
+                let last = cycle.last,
+                let penultimate = cycle.dropLast().last,
+                last.x == penultimate.x,
+                let first = cycle.first,
+                first.x == last.x,
+                (first.y < last.y) == (last.y < penultimate.y)
+            {
+                // penultimate -- last -- first form a single vertical segment with last in the middle, so it is extraneous.
+                cycle.removeLast()
             }
 
             cycles.append(.init(cycle))

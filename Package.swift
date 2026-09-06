@@ -1,9 +1,17 @@
-// swift-tools-version:5.4
+// swift-tools-version:5.10
 
 import PackageDescription
 
 let package = Package(
     name: "RectangleContour",
+    platforms: [
+      .iOS(.v14),
+      .macCatalyst(.v14),
+      .macOS(.v11),
+      .tvOS(.v14),
+      .visionOS(.v1),
+      .watchOS(.v7),
+    ],
     products: [
         // This is the library on which your own targets should depend.
         .library(
